@@ -29,7 +29,7 @@ module Auth0
             include_fields: options.fetch(:include_fields, nil),
             q:              options.fetch(:q, nil)
           }
-          request_params[:search_engine] = :v2 if request_params[:q]
+          request_params[:search_engine] = :v3 if request_params[:q]
           get(users_path, request_params)
         end
         alias get_users users

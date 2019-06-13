@@ -9,19 +9,42 @@ describe Auth0::Api::V2::Users do
   context '.users' do
     it { expect(@instance).to respond_to(:users) }
     it { expect(@instance).to respond_to(:get_users) }
-    it 'is expected to call /api/v2/users' do
-      expect(@instance).to receive(:get).with(
-        '/api/v2/users',
-        per_page: nil,
-        page: nil,
-        include_totals: nil,
-        sort: nil,
-        connection: nil,
-        fields: nil,
-        include_fields: nil,
-        q: nil
-      )
-      expect { @instance.users }.not_to raise_error
+
+    context 'when q parameter is nil' do
+      it 'is expected to call /api/v2/users' do
+        expect(@instance).to receive(:get).with(
+          '/api/v2/users',
+          per_page: nil,
+          page: nil,
+          include_totals: nil,
+          sort: nil,
+          connection: nil,
+          fields: nil,
+          include_fields: nil,
+          q: nil
+        )
+        expect { @instance.users }.not_to raise_error
+      end
+    end
+
+    context 'when q parameter is present' do
+      let(:q) { 'app_metadata.invitation.token: jskdfhalkhfiauwekjfasdf' }
+
+      it 'is expected to call /api/v2/users with the search engine parameter set to v3' do
+        expect(@instance).to receive(:get).with(
+          '/api/v2/users',
+          per_page: nil,
+          page: nil,
+          include_totals: nil,
+          sort: nil,
+          connection: nil,
+          fields: nil,
+          include_fields: nil,
+          q: 'app_metadata.invitation.token: jskdfhalkhfiauwekjfasdf',
+          search_engine: :v3
+        )
+        expect { @instance.users(q: q) }.not_to raise_error
+      end
     end
   end
 
